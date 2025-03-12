@@ -1,0 +1,46 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 4px #dafd00 solid;
+    font-weight: 800;
+    height: 80px;
+    gap: 80px;
+    background-color: white;
+    label{
+        display: none;
+    }
+}
+
+.logoAnuncia{
+    width: 229px;
+    height: 80px;
+    object-fit: cover;
+} 
+
+.buttons{
+    transition: all .4s;
+    border-radius: 20px;
+    padding: 5px 20px;
+    color: black;
+    &:hover{
+        transform: scale(1.1);
+        background-color: #dafd00;
+        text-shadow: 1px 1px black;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.424);
+    }
+}
+
+.erpSelectContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    padding: 0 15px;
+
+    &:hover{
+        cursor: pointer;
+    }
+}

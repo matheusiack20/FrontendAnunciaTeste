@@ -1,0 +1,39 @@
+.connectContainer{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    padding: 30px 0;
+}
+
+.connectSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.connectTitle{
+    font-weight: 800;
+    font-size: 36px;
+}
+
+.connectButton{
+    margin-top: 10px;
+    background-color: #C1C101;
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-weight: bold;
+    transition: all .5s;
+
+    &:hover{
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.424);
+    }
+}
+
+.disconnectButton{
+    background-color: red;
+    @extend .connectButton;
+}
