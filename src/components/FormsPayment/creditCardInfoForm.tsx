@@ -46,10 +46,14 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     const [cvvLength, setCvvLength] = useState(3);
 
     useEffect(() => {
-        sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
-        const cardType = getCardType(formData.numeroCartao);
-        setBandeira(cardType ? bandeiras[cardType] : null);
-        setCvvLength(cardType === 'amex' ? 4 : 3);
+        try {
+            sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
+            const cardType = getCardType(formData.numeroCartao);
+            setBandeira(cardType ? bandeiras[cardType] : null);
+            setCvvLength(cardType === 'amex' ? 4 : 3);
+        } catch (error) {
+            console.error('Erro ao atualizar bandeira do cartão:', error);
+        }
     }, [formData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +61,13 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
         setFormData({ ...formData, [name]: value });
 
         if (name === 'numeroCartao') {
-            const cardType = getCardType(value);
-            setBandeira(cardType ? bandeiras[cardType] : null);
-            setCvvLength(cardType === 'amex' ? 4 : 3);
+            try {
+                const cardType = getCardType(value);
+                setBandeira(cardType ? bandeiras[cardType] : null);
+                setCvvLength(cardType === 'amex' ? 4 : 3);
+            } catch (error) {
+                console.error('Erro ao identificar tipo de cartão:', error);
+            }
         }
     };
 
@@ -103,7 +111,11 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     };
 
     const handleNext = () => {
-        onNext(formData);
+        try {
+            onNext(formData);
+        } catch (error) {
+            console.error('Erro ao avançar para o próximo passo:', error);
+        }
     };
 
     return (
