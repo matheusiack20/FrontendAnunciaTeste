@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Image from 'next/image';
 import InputMask from 'react-input-mask'; // Adicione a biblioteca de mascaramento de entrada
@@ -44,6 +44,10 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     });
     const [bandeira, setBandeira] = useState<string | null>(null);
     const [cvvLength, setCvvLength] = useState(3);
+
+    const numeroCartaoRef = useRef<HTMLInputElement>(null);
+    const validadeRef = useRef<HTMLInputElement>(null);
+    const cvvRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
@@ -135,6 +139,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                             onChange={handleChange} 
                             className="w-full border-none outline-none"
                             placeholder="0000 0000 0000 0000"
+                            ref={numeroCartaoRef}
                         />
                         {bandeira ? <Image src={bandeira} alt="Bandeira do Cartão" className="h-6 ml-2" width={24} height={24} style={{ objectFit: 'contain' }} /> : <CreditCardIcon />}
                     </div>
@@ -152,6 +157,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                             className="w-full border-none outline-none"
                             placeholder="MM/AA"
                             maxLength={5}
+                            ref={validadeRef}
                         />
                     </div>
                 </div>
@@ -168,6 +174,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                             className="w-full border-none outline-none"
                             placeholder="000"
                             maxLength={cvvLength}
+                            ref={cvvRef}
                         />
                     </div>
                 </div>
