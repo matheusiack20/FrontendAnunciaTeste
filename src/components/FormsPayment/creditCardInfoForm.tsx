@@ -45,9 +45,9 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     const [bandeira, setBandeira] = useState<string | null>(null);
     const [cvvLength, setCvvLength] = useState(3);
 
-    const numeroCartaoRef = useRef<HTMLInputElement>(null);
-    const validadeRef = useRef<HTMLInputElement>(null);
-    const cvvRef = useRef<HTMLInputElement>(null);
+    const numeroCartaoRef = useRef<InputMask>(null);
+    const validadeRef = useRef<InputMask>(null);
+    const cvvRef = useRef<InputMask>(null);
 
     useEffect(() => {
         sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
