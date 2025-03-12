@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import Image from 'next/image';
-import InputMask from 'react-input-mask'; // Adicione a biblioteca de mascaramento de entrada
+import Image, { StaticImageData } from 'next/image';
 
 // Importação de imagens das bandeiras
 const cartao_visa = 'https://pub-89239b4811024aaaa4f192425e55f28a.r2.dev/logo_visa.png';
@@ -46,14 +45,10 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     const [cvvLength, setCvvLength] = useState(3);
 
     useEffect(() => {
-        try {
-            sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
-            const cardType = getCardType(formData.numeroCartao);
-            setBandeira(cardType ? bandeiras[cardType] : null);
-            setCvvLength(cardType === 'amex' ? 4 : 3);
-        } catch (error) {
-            console.error('Erro ao atualizar bandeira do cartão:', error);
-        }
+        sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
+        const cardType = getCardType(formData.numeroCartao);
+        setBandeira(cardType ? bandeiras[cardType] : null);
+        setCvvLength(cardType === 'amex' ? 4 : 3);
     }, [formData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,13 +56,9 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
         setFormData({ ...formData, [name]: value });
 
         if (name === 'numeroCartao') {
-            try {
-                const cardType = getCardType(value);
-                setBandeira(cardType ? bandeiras[cardType] : null);
-                setCvvLength(cardType === 'amex' ? 4 : 3);
-            } catch (error) {
-                console.error('Erro ao identificar tipo de cartão:', error);
-            }
+            const cardType = getCardType(value);
+            setBandeira(cardType ? bandeiras[cardType] : null);
+            setCvvLength(cardType === 'amex' ? 4 : 3);
         }
     };
 
@@ -110,14 +101,6 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
         }
     };
 
-    const handleNext = () => {
-        try {
-            onNext(formData);
-        } catch (error) {
-            console.error('Erro ao avançar para o próximo passo:', error);
-        }
-    };
-
     return (
         <div className="w-full border rounded-xl h-auto p-2 py-3">
             <h1 className="font-bold mb-5">Pagamento</h1>
@@ -138,9 +121,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                 <div className="w-1/2">
                     <h1>Número do Cartão</h1>
                     <div className="mt-2 p-1 w-full flex items-center justify-between whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <InputMask 
-                            mask="9999 9999 9999 9999"
-                            maskChar=""
+                        <input 
                             type="text" 
                             name="numeroCartao" 
                             value={formData.numeroCartao} 
@@ -154,9 +135,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                 <div className="w-2/5">
                     <h1>Validade</h1>
                     <div className="mt-2 p-1 w-full flex items-center whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <InputMask 
-                            mask="99/99"
-                            maskChar=""
+                        <input 
                             type="text" 
                             name="validade" 
                             value={formData.validade} 
@@ -170,9 +149,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                 <div className="w-1/2">
                     <h1>CVV</h1>
                     <div className="mt-2 p-1 w-full flex items-center whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <InputMask 
-                            mask="9999"
-                            maskChar=""
+                        <input 
                             type="text" 
                             name="cvv" 
                             value={formData.cvv} 
@@ -209,7 +186,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                         Voltar
                     </button>
                     <button
-                        onClick={handleNext}
+                        onClick={() => onNext(formData)}
                         className="w-36 bg-[#dafd00] text-black px-4 py-2 rounded-md hover:bg-[#979317] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50"
                     >
                         Avançar
