@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import InputMask from 'react-input-mask'; // Adicione a biblioteca de mascaramento de entrada
 
 const estados = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
@@ -85,7 +86,9 @@ const ClientInfoForm = ({ onNext }: { onNext: (formData: any) => void }) => {
                 <div className="w-2/5">
                     <h1>CPF<span className="text-red-700">*</span></h1>
                     <div className="mt-2 p-1 w-full flex items-center whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <input 
+                        <InputMask 
+                            mask="999.999.999-99"
+                            maskChar=""
                             type="text" 
                             name="cpf" 
                             value={formData.cpf} 
@@ -98,7 +101,9 @@ const ClientInfoForm = ({ onNext }: { onNext: (formData: any) => void }) => {
                 <div className="w-1/2">
                     <h1>Celular com DDD<span className="text-red-700">*</span></h1>
                     <div className="mt-2 p-1 w-full flex items-center whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <input 
+                        <InputMask 
+                            mask="(99) 99999-9999"
+                            maskChar=""
                             type="text" 
                             name="celular" 
                             value={formData.celular} 
@@ -111,7 +116,9 @@ const ClientInfoForm = ({ onNext }: { onNext: (formData: any) => void }) => {
                 <div className="w-1/2">
                     <h1>CEP<span className="text-red-700">*</span></h1>
                     <div className="mt-2 p-1 w-full flex items-center whitespace-nowrap rounded-lg shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">
-                        <input 
+                        <InputMask 
+                            mask="99999-999"
+                            maskChar=""
                             type="text" 
                             name="cep" 
                             value={formData.cep} 
