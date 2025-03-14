@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ConfigLayoutPage from "@/components/configLayoutPage/page";
 import SecurityAccountProfile from "@/components/securityAccountProfile/securityAccountProfile";
 import UserProfileInfo from '@/components/userProfileInfo/userProfileInfo';
@@ -13,7 +13,37 @@ const SectionWrapper = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
 };
+
 const ContentPageUserAccount: React.FC = () => {
+    // Adicionar efeito para salvar dados do usuário para uso no checkout
+    useEffect(() => {
+        // Esta função salva os dados do usuário da página de conta para uso no checkout
+        const saveUserDataForCheckout = () => {
+            // Verificar se está no navegador
+            if (typeof window === 'undefined') return;
+            
+            try {
+                // Tentar obter dados do usuário a partir do localStorage
+                const userData = localStorage.getItem('user');
+                if (userData) {
+                    try {
+                        // Salvar na sessionStorage para uso no checkout
+                        const parsedUser = JSON.parse(userData);
+                        sessionStorage.setItem('accountUserData', JSON.stringify(parsedUser));
+                        console.log('Dados do usuário salvos para checkout:', parsedUser);
+                    } catch (e) {
+                        console.error('Erro ao processar dados do usuário:', e);
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao salvar dados do usuário para checkout:', error);
+            }
+        };
+        
+        // Executar a função quando o componente montar
+        saveUserDataForCheckout();
+    }, []);
+    
     return (
       <div id="user-account" className="h-full w-full flex justify-center">
           <div className="w-3/5">

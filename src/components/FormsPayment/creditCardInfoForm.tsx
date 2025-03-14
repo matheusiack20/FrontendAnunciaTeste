@@ -43,6 +43,7 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     });
     const [bandeira, setBandeira] = useState<string | null>(null);
     const [cvvLength, setCvvLength] = useState(3);
+    const [cvvError, setCvvError] = useState<string | null>(null);
 
     useEffect(() => {
         sessionStorage.setItem('creditCardInfoForm', JSON.stringify(formData));
@@ -97,6 +98,14 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
     const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         if (/^\d*$/.test(value) && value.length <= cvvLength) {
+            // Alerta para CVV começando com 6 (simulação de recusa)
+            if (value.startsWith('6')) {
+                setCvvError('Atenção: CVVs começando com 6 serão recusados (ambiente de testes).');
+            } else if (value === '612') {
+                setCvvError('Atenção: no ambiente do Pagar.me, o CVV 612 causa recusa do cartão.');
+            } else {
+                setCvvError(null);
+            }
             setFormData({ ...formData, cvv: value });
         }
     };
@@ -154,11 +163,14 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                             name="cvv" 
                             value={formData.cvv} 
                             onChange={handleCvvChange} 
-                            className="w-full border-none outline-none"
+                            className={`w-full border-none outline-none ${cvvError ? 'bg-red-50' : ''}`}
                             placeholder="000"
                             maxLength={cvvLength}
                         />
                     </div>
+                    {cvvError && (
+                        <p className="text-red-500 text-xs mt-1">{cvvError}</p>
+                    )}
                 </div>
                 <h1 className="w-full font-bold">Você possui cupom de desconto?</h1>
                 <div className="w-1/2">
@@ -187,11 +199,23 @@ const CreditCardInfo: React.FC<CreditCardInfoProps> = ({ onNext, onBack }) => {
                     </button>
                     <button
                         onClick={() => onNext(formData)}
-                        className="w-36 bg-[#dafd00] text-black px-4 py-2 rounded-md hover:bg-[#979317] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50"
+                        className={`w-36 bg-[#dafd00] text-black px-4 py-2 rounded-md hover:bg-[#979317] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50 ${formData.cvv.startsWith('6') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={formData.cvv.startsWith('6')}
                     >
                         Avançar
                     </button>
                 </div>
+            </div>
+            
+            {/* Informação sobre cartões de teste do Pagar.me */}
+            <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <h3 className="text-sm font-bold mb-1">Informações sobre o ambiente de testes:</h3>
+                <ul className="text-xs list-disc pl-4">
+                    <li>Para testes, use um cartão com número 4000000000000010</li>
+                    <li>Qualquer data de validade futura é aceita</li>
+                    <li>Para aprovação, use qualquer CVV exceto números que começam com 6</li>
+                    <li>CVVs que começam com 6 simularão recusa da transação</li>
+                </ul>
             </div>
         </div>
     );

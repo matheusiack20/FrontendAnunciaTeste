@@ -77,47 +77,16 @@ const ReviewPaymentInfo: React.FC<ReviewPaymentInfoProps> = ({ onNext, onBack })
         return '';
     };
 
-    const handleNext = async () => {
+    const handleNext = () => {
         setIsLoading(true);
         try {
-            const response = await processPayment(paymentInfo); // Supondo que processPayment é a função que faz a chamada à API de pagamento
-            if (response.status === 'refused') {
-                if (response.refuse_reason) {
-                    handleRefusal(response.refuse_reason);
-                } else {
-                    alert('Pagamento recusado: Motivo desconhecido.');
-                }
-            } else if (response.status === 'analyzing') {
-                alert('Pagamento em análise. Por favor, aguarde a confirmação.');
-                onNext();
-            } else {
-                onNext();
-            }
+            // Agora apenas avançamos para o próximo passo
+            // Deixamos o processamento de pagamento para o controlador
+            onNext();
         } catch (error) {
-            console.error('Erro ao processar pagamento:', error);
-            // Tratar erro genérico
+            console.error('Erro ao processar finalização:', error);
         } finally {
             setIsLoading(false);
-        }
-    };
-
-    const handleRefusal = (reason: string) => {
-        switch (reason) {
-            case 'insufficient_funds':
-                alert('Pagamento recusado: Fundos insuficientes.');
-                break;
-            case 'expired_card':
-                alert('Pagamento recusado: Cartão expirado.');
-                break;
-            case 'acquirer':
-                alert('Pagamento recusado: Problema com o adquirente.');
-                break;
-            case 'antifraud':
-                alert('Pagamento recusado: Suspeita de fraude.');
-                break;
-            default:
-                alert('Pagamento recusado: Motivo desconhecido.');
-                break;
         }
     };
 
@@ -163,7 +132,7 @@ const ReviewPaymentInfo: React.FC<ReviewPaymentInfoProps> = ({ onNext, onBack })
                     <div className="flex justify-between items-center">
                         <div className="flex flex-col text-xs">
                             <span>Nome do Titular: {paymentInfo.nomeTitular}</span>
-                            <span>Número do Cartão: **** **** **** {paymentInfo.numeroCartao.slice(-4)}</span>
+                            <span>Número do Cartão: **** **** **** {paymentInfo.numeroCartao?.slice(-4) || '****'}</span>
                             <span>Validade: {paymentInfo.validade}</span>
                         </div>
                     </div>
@@ -174,34 +143,16 @@ const ReviewPaymentInfo: React.FC<ReviewPaymentInfoProps> = ({ onNext, onBack })
             </div>
             <div className="flex justify-between mt-4">
                 <button onClick={onBack} className="bg-[#000000] text-white px-4 py-2 rounded-md hover:bg-[#464647] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50">Voltar</button>
-                <button onClick={handleNext} className="bg-[#dafd00] text-black px-4 py-2 rounded-md hover:bg-[#979317] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50" disabled={isLoading}>
-                    {isLoading ? 'Carregando...' : 'Finalizar Compra'}
+                <button 
+                    onClick={handleNext} 
+                    className="bg-[#dafd00] text-black px-4 py-2 rounded-md hover:bg-[#979317] transition shadow-gray-500 shadow-sm border border-gray-500 border-opacity-50" 
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Processando...' : 'Finalizar Compra'}
                 </button>
             </div>
         </div>
     );
-}
-
-async function processPayment(paymentInfo: any) {
-    // Simulate an API call to process the payment
-    return new Promise<{ status: string, refuse_reason?: string }>((resolve) => {
-        setTimeout(() => {
-            // Simulate different responses based on card number for demonstration purposes
-            if (paymentInfo.numeroCartao.endsWith('1')) {
-                resolve({ status: 'refused', refuse_reason: 'insufficient_funds' });
-            } else if (paymentInfo.numeroCartao.endsWith('2')) {
-                resolve({ status: 'refused', refuse_reason: 'expired_card' });
-            } else if (paymentInfo.numeroCartao.endsWith('3')) {
-                resolve({ status: 'refused', refuse_reason: 'acquirer' });
-            } else if (paymentInfo.numeroCartao.endsWith('4')) {
-                resolve({ status: 'refused', refuse_reason: 'antifraud' });
-            } else if (paymentInfo.numeroCartao.endsWith('5')) {
-                resolve({ status: 'analyzing' });
-            } else {
-                resolve({ status: 'approved' });
-            }
-        }, 2000); // Simulate network delay
-    });
 }
 
 export default ReviewPaymentInfo;

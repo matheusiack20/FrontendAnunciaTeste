@@ -79,6 +79,19 @@ const AuthContent: React.FC<Omit<AuthProps, 'user'> & { user: AuthProps['user'],
     checkAuth();
   }, [router, searchParams]);
 
+  useEffect(() => {
+    // Esta função salva os dados do usuário para uso no checkout
+    if (user && (user.name || user.email)) {
+      try {
+        // Salvar na sessionStorage para uso em múltiplos componentes
+        sessionStorage.setItem('authUserData', JSON.stringify(user));
+        console.log('Dados do withAuth HOC salvos para checkout');
+      } catch (e) {
+        console.error('Erro ao salvar dados do withAuth:', e);
+      }
+    }
+  }, [user]);
+
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>Erro: {error}</div>;
 
